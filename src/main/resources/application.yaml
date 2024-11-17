@@ -34,7 +34,7 @@ users:
     data:
       users:
         - username: 'Admin123321'
-          password: 'Admin123321_#@!'
+          password: 'Admin123321_'
           email: 'admin_1@rental.com'
           first-name: 'Bob'
           last-name: 'Dylan'

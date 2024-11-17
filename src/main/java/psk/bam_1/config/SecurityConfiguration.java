@@ -1,6 +1,8 @@
 package psk.bam_1.config;
 
 import lombok.NonNull;
+import psk.bam_1.jwt.JwtTokenFilter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -45,14 +48,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http,
-                                                   final @NonNull AuthenticationManager authenticationManager) throws Exception {
+                                                   final @NonNull AuthenticationManager authenticationManager,
+                                                   final @NonNull JwtTokenFilter jwtTokenFilter) throws Exception {
         http
                 .authenticationManager(authenticationManager)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractAuthenticationFilterConfigurer::disable)
-
                 .logout(AbstractHttpConfigurer::disable)
+
+                .addFilterAfter(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
@@ -62,7 +67,10 @@ public class SecurityConfiguration {
 
                 //  API
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").anonymous())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").anonymous()
+
+                        .requestMatchers(HttpMethod.GET, "api/v1/users/**").authenticated()
+                )
 
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
