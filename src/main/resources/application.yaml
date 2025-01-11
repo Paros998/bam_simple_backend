@@ -2,6 +2,11 @@ server:
   port: 8080
   error:
     include-message: always
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/domain.pfx
+    key-store-password: ${SSL_PASSWORD}
+    enabled: true
 
 management:
   server:
@@ -24,6 +29,8 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: ${SHOW_SQL:true}
+  config:
+    import: optional:file:.env[.properties]
 
 jwt:
   secret: absfol7814lqmva7891294nn9asa783nr293urnq9adm38ry2
@@ -33,9 +40,9 @@ users:
     enabled: true
     data:
       users:
-        - username: 'Admin123321'
-          password: 'Admin123321_'
-          email: 'admin_1@rental.com'
+        - username: 'Client123321'
+          password: 'Client123321_'
+          email: 'client_1@rental.com'
           first-name: 'Bob'
           last-name: 'Dylan'
           phone-number: '887102990'
