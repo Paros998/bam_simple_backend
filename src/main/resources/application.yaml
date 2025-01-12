@@ -48,3 +48,10 @@ users:
           phone-number: '887102990'
           national-id: '92102005998'
           enabled: true
+posts:
+  starter:
+    enabled: true
+    data:
+      posts:
+        - title: Post1
+          content: Example post

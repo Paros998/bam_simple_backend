@@ -70,6 +70,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").anonymous()
 
                         .requestMatchers(HttpMethod.GET, "api/v1/users/**").authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "api/v1/posts/**").authenticated()
                 )
 
                 .sessionManagement(sessionManagement -> sessionManagement
